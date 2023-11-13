@@ -1,3 +1,5 @@
+import { Stack, useRouter, useGlobalSearchParams } from 'expo-router';
+import { useCallback, useState } from 'react';
 import {
   Text,
   View,
@@ -6,30 +8,34 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import { Stack, useRouter, useGlobalSearchParams } from 'expo-router';
-import { useCallback, useState } from 'react';
 
 import {
   Company,
   JobAbout,
   JobFooter,
-  JobsTabs,
+  JobTabs,
   ScreenHeaderBtn,
   Specifics,
 } from '../../components';
 import { COLORS, icons, SIZES } from '../../constants';
 import useFetch from '../../hook/useFetch';
 
+const tabs = ['About', 'Qualifications', 'Responsibilities'];
+
 const JobDetails = () => {
   const params = useGlobalSearchParams();
   const router = useRouter();
+
+  //   console.log(params, 'params', params.id);
+
   const { data, isLoading, error, refetch } = useFetch('job-details', {
     job_id: params.id,
   });
 
-  console.log(data);
+  //   console.log(data);
 
   const [refreshing, setRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState(tabs[0]);
 
   const onRefresh = () => {};
 
@@ -39,7 +45,7 @@ const JobDetails = () => {
         options={{
           headerStyle: { backgroundColor: COLORS.lightWhite },
           headerShadowVisible: false,
-          headerBackTitleVisible: false,
+          headerBackVisible: false,
           headerLeft: () => (
             <ScreenHeaderBtn
               iconUrl={icons.left}
@@ -65,7 +71,7 @@ const JobDetails = () => {
           ) : error ? (
             <Text>Something went wrong</Text>
           ) : data.length === 0 ? (
-            <Text>No data found</Text>
+            <Text>No data</Text>
           ) : (
             <View style={{ padding: SIZES.medium, paddingBottom: 100 }}>
               <Company
@@ -74,9 +80,11 @@ const JobDetails = () => {
                 companyName={data[0].employer_name}
                 location={data[0].job_country}
               />
-              <JobAbout />
-              <JobsTabs />
-              <JobFooter />
+              <JobTabs
+                tabs={tabs}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
             </View>
           )}
         </ScrollView>

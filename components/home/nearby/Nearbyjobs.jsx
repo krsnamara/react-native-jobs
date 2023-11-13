@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 import styles from './nearbyjobs.style';
 import { COLORS } from '../../../constants';
@@ -8,13 +8,12 @@ import useFetch from '../../../hook/useFetch';
 
 const Nearbyjobs = () => {
   const router = useRouter();
-
   const { data, isLoading, error } = useFetch('search', {
-    query: 'React developer',
+    query: 'React Native developer',
     num_pages: 1,
   });
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <View style={styles.container}>
@@ -24,6 +23,7 @@ const Nearbyjobs = () => {
           <Text style={styles.headerBtn}>Show all</Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.cardsContainer}>
         {isLoading ? (
           <ActivityIndicator size="large" color={COLORS.primary} />
