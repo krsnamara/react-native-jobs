@@ -26,18 +26,43 @@ const JobDetails = () => {
   const params = useGlobalSearchParams();
   const router = useRouter();
 
-  //   console.log(params, 'params', params.id);
+  console.log(params, 'params', params.id);
 
   const { data, isLoading, error, refetch } = useFetch('job-details', {
     job_id: params.id,
   });
 
-  //   console.log(data);
+  console.log(data);
 
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
   const onRefresh = () => {};
+
+  const displayTabContent = () => {
+    switch (activeTab) {
+      case 'Qualifications':
+        return (
+          <Specifics
+            title="Qualifications"
+            points={data[0].job_highlights?.Qualifications ?? ['N/A']}
+          />
+        );
+      case 'About':
+        return (
+          <JobAbout info={data[0].job_description ?? 'No data provided'} />
+        );
+      case 'Responsibilities':
+        return (
+          <Specifics
+            title="Responsibilities"
+            points={data[0].job_highlights?.Responsibilities ?? ['N/A']}
+          />
+        );
+      default:
+        break;
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>
@@ -85,6 +110,8 @@ const JobDetails = () => {
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
               />
+
+              {displayTabContent()}
             </View>
           )}
         </ScrollView>
